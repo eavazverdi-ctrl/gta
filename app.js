@@ -152,7 +152,7 @@ setSliders(initV);
     } else if (v === 'ehsan'){
       const oneWeek = 7*24*60*60*1000;
       saveLic({ type:'trial', exp: now() + oneWeek, ts: now() });
-      alert('לایسנס یک هفته ای شما تایید شد.');
+      alert('لایسنس یک هفته ای شما تایید شد.');
       unlockUI();
     } else {
       errEl.hidden = false;
@@ -166,4 +166,21 @@ setSliders(initV);
 
   if (btnEl) btnEl.addEventListener('click', tryAuth);
   if (passEl) passEl.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') tryAuth(); });
+
+// -- ensure auth listeners exist even if HTML was appended after this script --
+function bindAuthListeners(){
+  const passEl2 = document.getElementById('authPass');
+  const btnEl2  = document.getElementById('authBtn');
+  if (btnEl2 && !btnEl2.__bound){
+    btnEl2.addEventListener('click', tryAuth);
+    btnEl2.__bound = true;
+  }
+  if (passEl2 && !passEl2.__bound){
+    passEl2.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') tryAuth(); });
+    passEl2.__bound = true;
+  }
+}
+bindAuthListeners();
+document.addEventListener('DOMContentLoaded', bindAuthListeners);
+
 })();
