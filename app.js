@@ -119,3 +119,50 @@ document.querySelectorAll('.preset-row button').forEach(btn=>{
 
 const initV = load();
 setSliders(initV);
+
+
+// ===== v22: Password Gate =====
+(function(){
+  const LICENSE_KEY = 'fxLicenseV1';
+  function now(){ return Date.now(); }
+  function loadLic(){ try { return JSON.parse(localStorage.getItem(LICENSE_KEY) || 'null'); } catch(e){ return null; } }
+  function saveLic(v){ try { localStorage.setItem(LICENSE_KEY, JSON.stringify(v)); } catch(e){} }
+  function isValid(lic){
+    if (!lic) return false;
+    if (lic.type === 'permanent') return true;
+    if (lic.type === 'trial' && typeof lic.exp === 'number') return now() < lic.exp;
+    return false;
+  }
+  function unlockUI(){ document.body.classList.add('unlocked'); }
+  function lockUI(){ document.body.classList.remove('unlocked'); }
+
+  const existing = loadLic();
+  if (isValid(existing)) { unlockUI(); } else { lockUI(); }
+
+  const passEl = document.getElementById('authPass');
+  const btnEl  = document.getElementById('authBtn');
+  const errEl  = document.getElementById('authErr');
+
+  function tryAuth(){
+    const v = (passEl.value || '').trim();
+    if (v === 'kireehsan'){
+      saveLic({ type:'permanent', ts: now() });
+      unlockUI();
+    } else if (v === 'ehsan'){
+      const oneWeek = 7*24*60*60*1000;
+      saveLic({ type:'trial', exp: now() + oneWeek, ts: now() });
+      unlockUI();
+    } else {
+      errEl.hidden = false;
+      return;
+    }
+    passEl.value = '';
+    errEl.hidden = true;
+    const auth = document.getElementById('authGate');
+    if (auth) auth.setAttribute('aria-hidden','true');
+  }
+
+  if (btnEl) btnEl.addEventListener('click', tryAuth);
+  if (passEl) passEl.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') tryAuth(); });
+})();
+

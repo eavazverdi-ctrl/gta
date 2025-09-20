@@ -119,3 +119,41 @@ hr{ border:none; border-top:1px solid rgba(255,255,255,0.08); margin:4px 0; }
 @media (prefers-reduced-motion: reduce){
   .card-head.clickable:active, .row.active{ transform:none; }
 }
+
+/* ===== v22: Password Gate ===== */
+body:not(.unlocked) .grid,
+body:not(.unlocked) .fab,
+body:not(.unlocked) .sheet { display: none !important; }
+
+.auth{
+  position: fixed; inset: 0; z-index: 20;
+  display: flex; align-items: center; justify-content: center;
+  background: transparent;
+}
+body.unlocked .auth{ display: none !important; }
+
+.auth-card{
+  width: min(480px, 86vw);
+  padding: 16px;
+  border-radius: 16px;
+  background: rgba(255,255,255,0.12);
+  border: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: saturate(180%) blur(18px);
+  -webkit-backdrop-filter: saturate(180%) blur(18px);
+  color: #fff;
+  box-shadow: 0 8px 30px rgba(0,0,0,.35);
+}
+.auth-title{ text-align:center; font-weight:800; margin-bottom:10px; }
+.auth input{
+  width:100%; font-size:16px; padding: 10px 12px; border-radius:12px;
+  background:#2C2C2E; color:#fff; border:1px solid rgba(255,255,255,0.18);
+  outline:none; -webkit-appearance:none;
+}
+.auth input:focus{ border-color: var(--accent); box-shadow: 0 0 0 3px color-mix(in oklab, var(--accent) 30%, transparent); background:#3A3A3C; }
+.auth button{
+  margin-top:8px; width:100%; padding:10px 12px; border-radius:12px;
+  background: rgba(255,255,255,0.18); color:#fff; border:1px solid rgba(255,255,255,0.22);
+}
+.auth button:active{ transform: scale(.98); }
+.auth-msg{ opacity:.8; font-size:12px; margin-top:8px; text-align:center; }
+.auth-error{ color:#FF3B30; font-size:13px; margin-top:6px; text-align:center; }
