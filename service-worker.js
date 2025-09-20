@@ -1,4 +1,4 @@
-const CACHE_NAME = 'fxlevels-v21';
+const CACHE_NAME = 'fxlevels-v23';
 const ASSETS = [
   './',
   './index.html',

@@ -147,10 +147,12 @@ setSliders(initV);
     const v = (passEl.value || '').trim();
     if (v === 'kireehsan'){
       saveLic({ type:'permanent', ts: now() });
+      alert('لایسنس دائمی شما تایید شد.');
       unlockUI();
     } else if (v === 'ehsan'){
       const oneWeek = 7*24*60*60*1000;
       saveLic({ type:'trial', exp: now() + oneWeek, ts: now() });
+      alert('לایسנס یک هفته ای شما تایید شد.');
       unlockUI();
     } else {
       errEl.hidden = false;
@@ -165,4 +167,3 @@ setSliders(initV);
   if (btnEl) btnEl.addEventListener('click', tryAuth);
   if (passEl) passEl.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') tryAuth(); });
 })();
-
