@@ -161,8 +161,10 @@ setSliders(initV);
     passEl.value = '';
     errEl.hidden = true;
     const auth = document.getElementById('authGate');
-    if (auth) auth.setAttribute('aria-hidden','true');
+    if (auth){ auth.setAttribute('aria-hidden','true'); auth.style.display='none'; }
   }
+
+  window._tryAuth = tryAuth;
 
   if (btnEl) btnEl.addEventListener('click', tryAuth);
   if (passEl) passEl.addEventListener('keydown', (e)=>{ if(e.key === 'Enter') tryAuth(); });
