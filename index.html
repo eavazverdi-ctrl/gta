@@ -12,6 +12,18 @@
   <link rel="stylesheet" href="app.css">
 </head>
 <body>
+  <!-- Password Gate (shown first) -->
+  <section class="auth" id="authGate" aria-hidden="false">
+    <div class="auth-card">
+      <div class="auth-title">لطفا لایسنس خود را وارد کنید.</div>
+      <input type="password" id="authPass" placeholder="رمز عبور" autocomplete="current-password" inputmode="text"
+             onkeydown="if(event.key==='Enter'){ document.getElementById('authBtn').click(); }">
+      <button id="authBtn" type="button"
+              onclick="(window._tryAuth && window._tryAuth()) || (window.__tryAuthInline && window.__tryAuthInline())">ورود</button>
+      <div class="auth-error" id="authErr" hidden>رمز اشتباه است.</div>
+    </div>
+  </section>
+
   <div class="bg-wall"></div>
   <div class="bg-dim"></div>
 
@@ -79,7 +91,42 @@
   </section>
 
   
+  
   <script src="app.js"></script>
+  <script>
+    // v26 inline fallback for auth (in case app.js didn't bind yet)
+    (function(){
+      if (window.__tryAuthInline) return;
+      function now(){ return Date.now(); }
+      function unlockUI(){
+        document.body.classList.add('unlocked');
+        var auth = document.getElementById('authGate');
+        if (auth){ auth.setAttribute('aria-hidden','true'); auth.style.display='none'; }
+      }
+      window.__tryAuthInline = function(){
+        var passEl = document.getElementById('authPass');
+        var errEl  = document.getElementById('authErr');
+        if (!passEl) return false;
+        var v = (passEl.value||'').trim();
+        if (v === 'kireehsan'){
+          try { localStorage.setItem('fxLicenseV1', JSON.stringify({type:'permanent', ts: now()})); } catch(e){}
+          alert('לایسنس دائمی شما تایید شد.');
+          unlockUI();
+          return true;
+        } else if (v === 'ehsan'){
+          var oneWeek = 7*24*60*60*1000;
+          try { localStorage.setItem('fxLicenseV1', JSON.stringify({type:'trial', exp: now() + oneWeek, ts: now()})); } catch(e){}
+          alert('לایسنس یک هفته ای شما تایید شد.');
+          unlockUI();
+          return true;
+        } else {
+          if (errEl) errEl.hidden = false;
+          return false;
+        }
+      };
+    })();
+  </script>
+
   <script>
     if ('serviceWorker' in navigator) {
       window.addEventListener('load', () => {
@@ -87,16 +134,6 @@
       });
     }
   </script>
-
-  <!-- Password Gate -->
-  <section class="auth" id="authGate" aria-hidden="false">
-    <div class="auth-card">
-      <div class="auth-title">لطفا لایسنس خود را وارد کنید.</div>
-      <input type="password" id="authPass" placeholder="رمز عبور" autocomplete="current-password" inputmode="text">
-      <button id="authBtn">ورود</button>
-      <div class="auth-error" id="authErr" hidden>رمز اشتباه است.</div>
-    </div>
-  </section>
 </body>
 </html>
 
