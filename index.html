@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1, user-scalable=no">
+  <title>FX Levels</title>
+  <meta name="theme-color" content="#0B0B10"/>
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icons/icon-180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <link rel="stylesheet" href="app.css">
+</head>
+<body>
+  <div class="bg-wall"></div>
+  <div class="bg-dim"></div>
+
+  <main class="grid">
+    <section class="card">
+      <div class="card-head green clickable" id="buyHead">خرید</div>
+      <div class="card-body">
+        <div class="row"><input id="buyTop"  inputmode="decimal" placeholder=""></div>
+        <div class="row"><input id="buyHigh" inputmode="decimal" placeholder=""></div>
+        <div class="row"><input id="buyLow"  inputmode="decimal" placeholder=""></div>
+        <hr/>
+        <div class="row"><div class="badge green-soft full" id="buyP1">—</div></div>
+        <div class="row"><div class="badge green-soft full" id="buyP2">—</div></div>
+        <div class="row"><div class="badge yellow full" id="buyStop">—</div></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-head pink clickable" id="sellHead">فروش</div>
+      <div class="card-body">
+        <div class="row"><input id="sellLow"  inputmode="decimal" placeholder=""></div>
+        <div class="row"><input id="sellHigh" inputmode="decimal" placeholder=""></div>
+        <div class="row"><input id="sellLow2" inputmode="decimal" placeholder=""></div>
+        <hr/>
+        <div class="row"><div class="badge yellow full" id="sellStop">—</div></div>
+        <div class="row"><div class="badge red-soft full" id="sellP2">—</div></div>
+        <div class="row"><div class="badge red-soft full" id="sellP1">—</div></div>
+      </div>
+    </section>
+  </main>
+
+  <button class="fab" id="glassFab" aria-label="تنظیم شیشه">⚙️</button>
+  <section class="sheet" id="glassSheet" aria-hidden="true">
+    <div class="sheet-handle"></div>
+    <div class="sheet-body">
+      <div class="sheet-title">تنظیم گلس بدنه</div>
+      <div class="sheet-row">
+        <label>شفافیت (alpha)</label>
+        <input type="range" id="alpha" min="0.04" max="0.30" step="0.01">
+        <span id="alphaVal"></span>
+      </div>
+      <div class="sheet-row">
+        <label>مرز (border alpha)</label>
+        <input type="range" id="border" min="0.00" max="0.20" step="0.01">
+        <span id="borderVal"></span>
+      </div>
+      <div class="sheet-row">
+        <label>تاری (blur px)</label>
+        <input type="range" id="blur" min="8" max="30" step="1">
+        <span id="blurVal"></span>
+      </div>
+      <div class="sheet-row">
+        <label>اشباع (saturate %)</label>
+        <input type="range" id="sat" min="120" max="220" step="5">
+        <span id="satVal"></span>
+      </div>
+      <div class="preset-row">
+        <button data-preset="soft">نرم</button>
+        <button data-preset="default">پیش‌فرض</button>
+        <button data-preset="solid">مات</button>
+        <button data-preset="reset">ریست</button>
+      </div>
+      <div class="hint">تغییرات ذخیره می‌شوند و در اجراهای بعدی هم اعمال می‌گردند.</div>
+    </div>
+  </section>
+
+  <script src="app.js"></script>
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./service-worker.js');
+      });
+    }
+  </script>
+</body>
+</html>

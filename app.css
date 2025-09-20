@@ -1,0 +1,121 @@
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+html, body { height: 100%; }
+:root{
+  --accent:#0A84FF;
+  --bg-dark:#0B0B10; --bg-dark-2:#101018;
+  --glass-alpha:0.12; --glass-border-alpha:0.08; --glass-blur:20px; --glass-sat:180%;
+  --glass-alpha-light:0.65; --glass-border-alpha-light:0.06;
+}
+@supports (color: AccentColor) { :root{ --accent: AccentColor; } }
+
+body { margin:0; font-family:-apple-system, system-ui, Segoe UI, Roboto, Helvetica, Arial, sans-serif; background:transparent; color:#EEE; }
+.bg-wall { position:fixed; inset:0; z-index:0; background:url('assets/wallpaper.jpg') center center / cover no-repeat; }
+.bg-dim  { position:fixed; inset:0; z-index:1; background:linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.35)); }
+
+.grid { position:relative; z-index:2; display:grid; grid-template-columns:1fr 1fr; gap:5px; padding:6px 8px calc(6px + env(safe-area-inset-bottom)); }
+
+.card{
+  position: relative;
+  border-radius: 16px;
+  overflow: hidden;
+  background: rgba(255,255,255,var(--glass-alpha));
+  border: 1px solid rgba(255,255,255,var(--glass-border-alpha));
+  backdrop-filter: saturate(var(--glass-sat)) blur(var(--glass-blur));
+  -webkit-backdrop-filter: saturate(var(--glass-sat)) blur(var(--glass-blur));
+  box-shadow: 0 1px 3px rgba(0,0,0,.25);
+}
+.card-head{
+  padding:5px 8px; text-align:center; font-weight:700; font-size:14.5px; line-height:1.1;
+  border-bottom:1px solid rgba(255,255,255,0.08); user-select:none; transition:transform .12s ease, background-color .12s ease;
+  min-height:28px; display:flex; align-items:center; justify-content:center;
+}
+.card-head.clickable:active{ transform:scale(.98); background:rgba(255,255,255,0.06); }
+.card-body{ padding:8px; }
+
+.row{ display:flex; align-items:center; gap:8px; margin-bottom:2px; border-radius:12px; transition: transform .08s ease, background-color .12s ease; }
+.row:focus-within{ outline:2px solid color-mix(in oklab, var(--accent) 25%, transparent); background: rgba(255,255,255,0.04); }
+.row.active{ background-color: rgba(255,255,255,0.06); transform: scale(.99); }
+
+.row input{
+  width:100%; margin:0; font-size:16px;
+  padding: calc(12px * 0.50) 10px;
+  color:#fff; background:#2C2C2E; border:1px solid rgba(255,255,255,0.18); border-radius:12px; outline:none; -webkit-appearance:none;
+  caret-color:var(--accent); transition:box-shadow .15s ease, border-color .15s ease, background .15s ease;
+}
+.row input::placeholder{ color:#B9BBC3; }
+.row input:focus{ border-color:var(--accent); box-shadow:0 0 0 3px color-mix(in oklab, var(--accent) 30%, transparent); background:#3A3A3C; }
+
+hr{ border:none; border-top:1px solid rgba(255,255,255,0.08); margin:4px 0; }
+
+.badge{ padding: calc(10px * 0.6) 10px; border-radius:12px; text-align:center; border:1px solid rgba(255,255,255,0.18);
+  font-weight:900; font-variant-numeric:tabular-nums; letter-spacing:.2px; background:rgba(255,255,255,0.10);
+  backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px); color:#fff; }
+.badge.full{ width:100%; display:block; }
+.green-soft { background: color-mix(in oklab, #00D27A 20%, rgba(255,255,255,0.10)); }
+.red-soft   { background: color-mix(in oklab, #FF3B30 18%, rgba(255,255,255,0.10)); }
+.yellow     { background: color-mix(in oklab, #FFD60A 26%, rgba(255,255,255,0.10)); }
+
+/* Controls UI */
+.fab{
+  position: fixed; bottom: calc(14px + env(safe-area-inset-bottom)); left: 14px;
+  width: 42px; height: 42px; border-radius: 50%;
+  background: rgba(255,255,255,0.16);
+  border: 1px solid rgba(255,255,255,0.20);
+  color: #fff; font-size: 18px; font-weight: 700;
+  display:flex; align-items:center; justify-content:center;
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+  box-shadow: 0 4px 16px rgba(0,0,0,.25);
+  z-index: 10;
+}
+.fab:active{ transform: scale(.96); }
+
+.sheet{
+  position: fixed; left:0; right:0; bottom:0;
+  transform: translateY(100%);
+  background: rgba(28,28,30,0.92);
+  border-top: 1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+  border-top-left-radius: 16px; border-top-right-radius: 16px;
+  z-index: 11;
+  transition: transform .25s cubic-bezier(.22,.61,.36,1);
+  padding-bottom: env(safe-area-inset-bottom);
+}
+.sheet.open{ transform: translateY(0%); }
+.sheet-handle{ width: 36px; height: 4px; border-radius: 2px; background: rgba(255,255,255,0.35); margin: 8px auto; }
+.sheet-body{ padding: 4px 14px 12px; color:#fff; }
+.sheet-title{ font-weight:700; margin:6px 0 10px; font-size:15px; text-align:center; }
+.sheet-row{ display:grid; grid-template-columns: 80px 1fr 48px; align-items:center; gap:8px; margin:6px 0; }
+.sheet-row label{ font-size:13px; color:#ddd; }
+.sheet-row input[type=range]{ width:100%; }
+.sheet-row span{ text-align:center; font-variant-numeric: tabular-nums; }
+.preset-row{ display:flex; gap:6px; justify-content:center; margin-top:10px; }
+.preset-row button{
+  padding:6px 10px; border-radius:10px; font-size:13px; color:#fff;
+  background: rgba(255,255,255,0.16); border:1px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(8px); -webkit-backdrop-filter: blur(8px);
+}
+.hint{ text-align:center; opacity:.75; font-size:12px; margin-top:8px; }
+
+/* Light mode */
+@media (prefers-color-scheme: light){
+  body{ color:#111; }
+  .bg-dim{ background:linear-gradient(180deg, rgba(255,255,255,.10), rgba(255,255,255,.10)); }
+  .card{ background: rgba(255,255,255,var(--glass-alpha-light)); border-color: rgba(0,0,0,var(--glass-border-alpha-light)); box-shadow: 0 1px 2px rgba(0,0,0,.06); }
+  .card-head{ border-bottom-color: rgba(0,0,0,0.06); }
+  .row input{ color:#111; background:#FFFFFF; border-color: rgba(0,0,0,0.12); }
+  .row input::placeholder{ color:#6B6B73; }
+  .badge{ color:#111; border-color: rgba(0,0,0,0.12); background: rgba(255,255,255,0.80); }
+  .green-soft { background: color-mix(in oklab, #38C172 22%, rgba(255,255,255,0.85)); }
+  .red-soft   { background: color-mix(in oklab, #FF3B30 16%, rgba(255,255,255,0.85)); }
+  .yellow     { background: color-mix(in oklab, #FFD60A 22%, rgba(255,255,255,0.85)); }
+}
+
+/* Fallback */
+@supports not ((-webkit-backdrop-filter: blur(1px)) or (backdrop-filter: blur(1px))){
+  .card, .badge{ backdrop-filter:none !important; -webkit-backdrop-filter:none !important; }
+  .card{ background:#1C1C1E; }
+  .badge{ background:#2C2C2E; }
+}
+@media (prefers-reduced-motion: reduce){
+  .card-head.clickable:active, .row.active{ transform:none; }
+}
